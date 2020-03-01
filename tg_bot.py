@@ -1,14 +1,14 @@
 import os
-
-import apiai
-import json
 from dotenv import load_dotenv
 from telegram.ext import CommandHandler
 from telegram.ext import Filters, MessageHandler
 from telegram.ext import Updater
 from google.api_core.exceptions import InvalidArgument
+import logging
 
 load_dotenv(verbose=True)
+
+logger = logging.getLogger('dialogflow_bot_logger.tg_bot_mod')
 
 project_id = os.getenv('PROJECT_ID')
 chat_id = os.getenv('CHAT_ID')
@@ -36,14 +36,21 @@ def text_message(bot, update):
 
     try:
         response = session_client.detect_intent(session=session, query_input=query_input)
-    except InvalidArgument:
-        raise
-    print("Query text:", response.query_result.query_text)
-    print("Detected intent:", response.query_result.intent.display_name)
-    print("Detected intent confidence:", response.query_result.intent_detection_confidence)
-    print("Fulfillment text:", response.query_result.fulfillment_text)
+    except InvalidArgument as message:
+        logger.debug(f'{message}')
 
     bot.send_message(chat_id=chat_id, text=response.query_result.fulfillment_text)
+
+
+class BotLoggerHandler(logging.Handler):
+    def __init__(self, bot, chat_id):
+        super().__init__()
+        self.bot = bot
+        self.chat_id = chat_id
+
+    def emit(self, record):
+        log_entry = self.format(record)
+        self.bot.send_message(self.chat_id, text=log_entry)
 
 
 def main():
@@ -51,10 +58,18 @@ def main():
     start_handler = CommandHandler('start', start)
     text_message_handler = MessageHandler(Filters.text, text_message)
 
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    logger.setLevel(logging.DEBUG)
+    handler = BotLoggerHandler(bot=updater.bot, chat_id=chat_id)
+    logger.addHandler(handler)
+
     dp = updater.dispatcher
     dp.add_handler(start_handler)
     dp.add_handler(text_message_handler)
     updater.start_polling()
+    logger.debug('bot started')
+
     updater.idle()
 
 

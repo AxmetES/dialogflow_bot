@@ -3,8 +3,10 @@ import json
 import dialogflow_v2 as dialogflow
 from google.api_core.exceptions import InvalidArgument, FailedPrecondition
 from dotenv import load_dotenv
+import logging
 
 load_dotenv()
+logger = logging.getLogger('dialogflow_bot_logger')
 
 
 def create_intent(project_id, display_name, training_phrases_parts,
@@ -28,10 +30,9 @@ def create_intent(project_id, display_name, training_phrases_parts,
     try:
         response = intents_client.create_intent(parent, intent)
     except InvalidArgument as message:
-        print(f'{message}')
+        logger.debug(f'{message}')
     else:
-        print('Intent created: {}'.format(response))
-        # TODO: Initialize `intent`:
+        logger.debug('Intent created: {}'.format(response))
 
 
 def train_agent(project_id):
@@ -43,6 +44,10 @@ def train_agent(project_id):
 
 def main():
     project_id = os.getenv('PROJECT_ID')
+
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    logger.setLevel(logging.DEBUG)
 
     with open('questions.json', 'r') as file:
         intents = json.load(file)
