@@ -1,7 +1,7 @@
 import os
 import json
 import dialogflow_v2 as dialogflow
-from google.api_core.exceptions import InvalidArgument, FailedPrecondition
+from google.api_core.exceptions import InvalidArgument
 from dotenv import load_dotenv
 import logging
 
