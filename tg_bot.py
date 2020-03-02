@@ -18,10 +18,6 @@ def start(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text='Здравствуйте')
 
 
-def echo(bot, update):
-    update.message.reply_text(update.message.text)
-
-
 def text_message(bot, update):
     import dialogflow_v2 as dialogflow
     session_client = dialogflow.SessionsClient()
@@ -68,7 +64,7 @@ def main():
     dp.add_handler(start_handler)
     dp.add_handler(text_message_handler)
     updater.start_polling()
-    logger.debug('bot started')
+    logger.debug('bot is started')
 
     updater.idle()
 
