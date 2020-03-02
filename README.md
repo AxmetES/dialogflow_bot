@@ -28,7 +28,7 @@ python tg_bot.py
 to start telegram bot.
 
 ```shell script
-pyton vk_bot.py 
+python vk_bot.py 
 ```
 to start vkontakte bot.
 
