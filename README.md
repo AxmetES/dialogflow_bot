@@ -27,9 +27,12 @@ python tg_bot.py
 ```
 to start telegram bot.
 
+![](bot_gif.gif)
+
 ```shell script
 python vk_bot.py 
 ```
+
 to start vkontakte bot.
 
 #### Training dialog flow agent to new phrases in code
