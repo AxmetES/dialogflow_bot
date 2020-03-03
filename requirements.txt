@@ -5,3 +5,4 @@ dialogflow==0.7.2
 google-api-core==1.16.0
 vk-api==11.7.0
 grpcio==1.27.2
+google-auth==1.11.2
