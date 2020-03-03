@@ -6,7 +6,7 @@ from telegram.ext import Updater
 from google.api_core.exceptions import InvalidArgument
 import logging
 
-load_dotenv(verbose=True)
+load_dotenv()
 
 logger = logging.getLogger('dialogflow_bot_logger.tg_bot_mod')
 
@@ -39,6 +39,7 @@ def text_message(bot, update):
 
 
 class BotLoggerHandler(logging.Handler):
+    # send message to user
     def __init__(self, bot, chat_id):
         super().__init__()
         self.bot = bot
