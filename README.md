@@ -15,7 +15,7 @@ BOT_TOKEN="your telegram bot token"
 PROJECT_ID="your google cloud project identification"
 CHAT_ID="your chat ID"
 DIALOG_TOKEN="dialog flow agent token"
-export GOOGLE_APPLICATION_CREDENTIALS ="your credentials JSON file"
+GOOGLE_APPLICATION_CREDENTIALS ="your credentials JSON file"
 VK_GROUP_KEY="vk api secret key"
 ```
 
@@ -37,16 +37,29 @@ to start vkontakte bot.
 
 #### Training dialog flow agent to new phrases in code
 
-Dialog flow agent training by json file. Script load training phrases from jason file and create new intents, 
-also intents can be created in [dialog flow side](https://dialogflow.com/).
-```python
-     with open('questions.json', 'r') as file:
-        intents = json.load(file)
-```
+Dialog flow agent training by json file. Specify the path to the file.
+
 to start:
 ```shell script
-python training.py
+python training.py [file path]
 ```
+Example content of training phrases, json file:
+
+```{
+    "Устройство на работу": {
+        "questions": [
+            "Как устроиться к вам на работу?",
+            "Как устроиться к вам?",
+            "Как работать у вас?",
+            "Хочу работать у вас",
+            "Возможно-ли устроиться к вам?",
+            "Можно-ли мне поработать у вас?",
+            "Хочу работать редактором у вас"
+        ],
+        "answer": "Если вы хотите устроиться к нам, напишите на почту game-of-verbs@gmail.com мини-эссе о себе и прикрепите ваше портфолио."
+    },  ...
+```
+
 ## License
 
 You may copy, distribute and modify the software.

@@ -4,6 +4,7 @@ import dialogflow_v2 as dialogflow
 from google.api_core.exceptions import InvalidArgument
 from dotenv import load_dotenv
 import logging
+import argparse
 
 load_dotenv()
 logger = logging.getLogger('dialogflow_bot_logger')
@@ -43,13 +44,17 @@ def train_agent(project_id):
 
 
 def main():
+    parser = argparse.ArgumentParser(description='file with phrases, only json')
+    parser.add_argument('in_dir', type=str, help='Input dir for file')
+    args = parser.parse_args()
+
     project_id = os.getenv('PROJECT_ID')
 
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     logger.setLevel(logging.DEBUG)
 
-    with open('questions.json', 'r') as file:
+    with open(args.in_dir, 'r') as file:
         intents = json.load(file)
 
     for intent in intents:
