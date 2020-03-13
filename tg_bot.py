@@ -3,23 +3,22 @@ from dotenv import load_dotenv
 from telegram.ext import CommandHandler
 from telegram.ext import Filters, MessageHandler
 from telegram.ext import Updater
-from google.api_core.exceptions import InvalidArgument
 import dialogflow_v2 as dialogflow
 import logging
 
 load_dotenv()
 
-logger = logging.getLogger('dialogflow_bot_logger.tg_bot_mod')
+logger = logging.getLogger('dialogflow_bot_logger')
 
+updater = Updater(os.getenv('BOT_TOKEN'))
 project_id = os.getenv('PROJECT_ID')
 
 
 def start(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text='Здравствуйте')
-    print(update.message.chat_id)
 
 
-def send_message(bot, update):
+def get_response(project_id, update):
     session_client = dialogflow.SessionsClient()
     session = session_client.session_path(project_id, update.message.chat_id)
 
@@ -31,7 +30,11 @@ def send_message(bot, update):
         response = session_client.detect_intent(session=session, query_input=query_input)
     except Exception as message:
         logger.debug(message)
+    return response
 
+
+def send_message(bot, update):
+    response = get_response(project_id, update)
     bot.send_message(chat_id=update.message.chat_id, text=response.query_result.fulfillment_text)
 
 
@@ -51,7 +54,6 @@ class BotLoggerHandler(logging.Handler):
 
 
 def main():
-    updater = Updater(os.getenv('BOT_TOKEN'))
     chat_id = os.getenv('CHAT_ID')
 
     start_handler = CommandHandler('start', start)
