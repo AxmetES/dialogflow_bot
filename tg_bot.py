@@ -20,7 +20,7 @@ def start(bot, update):
 
 
 def send_message(bot, update):
-    chat_id = update.message.chat_id
+    chat_id = f'tg_{update.message.chat_id}'
     text = update.message.text
     intent = detect_intent(project_id, chat_id, text)
     bot.send_message(chat_id=update.message.chat_id, text=intent.query_result.fulfillment_text)
